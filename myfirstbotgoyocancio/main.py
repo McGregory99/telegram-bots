@@ -1,7 +1,8 @@
 import telebot
 from telebot import types
+from decouple import config
 
-TOKEN = 'TU_TOKEN_AQUI'
+TOKEN = config('TELEGRAM_TOKEN')
 bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start', 'help'])
