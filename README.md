@@ -1,6 +1,6 @@
 # Bots de Telegram con Telebot
 
-Este repositorio contiene el código para crear dos bots de Telegram utilizando la biblioteca Telebot de Python. Uno de los bots proporciona información meteorológica, mientras que el otro ofrece funcionalidades interactivas como selección de pizzas y gestión de cuentas.
+Este repositorio contiene el código para crear varios bots de Telegram utilizando la biblioteca Telebot de Python. Cada bot tiene funcionalidades específicas, como proporcionar información meteorológica, ofrecer opciones interactivas, o guardar información de usuarios en una base de datos.
 
 ## Configuración General
 
@@ -15,6 +15,14 @@ Este repositorio contiene el código para crear dos bots de Telegram utilizando 
 5. Ejecuta el bot correspondiente usando `python main.py` en el directorio del bot que desees iniciar.
 
 ## Bots Disponibles
+
+### DatabaseBot
+
+- **Descripción**: Guarda la información de los usuarios en una base de datos SQLite.
+- **Funcionalidades**:
+  - Responde al comando `/start` con un mensaje de bienvenida.
+  - Proporciona ayuda con el comando `/help`.
+  - Guarda el ID de Telegram y el nombre del usuario en la base de datos con el comando `/save`.
 
 ### WeatherBot
 
