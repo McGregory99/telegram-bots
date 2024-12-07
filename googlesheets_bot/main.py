@@ -1,7 +1,7 @@
 import telebot
 from decouple import config
 from datetime import datetime
-from spreadsheet import escribir_en_hoja_de_calculo, obtener_ultima_fila_con_datos_columna
+from spreadsheet import escribir_en_hoja_de_calculo, obtener_ultima_fila_con_datos_columna, obtener_gastos_del_mes
 
 TOKEN = config('TELEGRAM_TOKEN')
 bot = telebot.TeleBot(TOKEN)
@@ -92,10 +92,10 @@ def handle_expense_input(message):
             confirmation_message = (
                 f"✅ Gasto registrado correctamente!\n"
                 f"┌───────────────────────────────┐\n"
-                f" │ Fecha: {state.fecha}\n"
-                f" │ Monto: {state.monto}\n"
-                f" │ Descripción: {state.descripcion}\n"
-                f" │ Tipo de gasto: {state.tipo_gasto}\n"
+                f" Fecha: {state.fecha}\n"
+                f" Monto: {state.monto}\n"
+                f" Descripción: {state.descripcion}\n"
+                f" Tipo de gasto: {state.tipo_gasto}\n"
                 f"└───────────────────────────────┘"
             )
             print(confirmation_message)
@@ -109,6 +109,31 @@ def handle_expense_input(message):
             bot.reply_to(message, "❌ El monto debe ser un número. Intenta nuevamente:")
         else:
             bot.reply_to(message, "❌ Error en el formato. Intenta nuevamente.")
+
+@bot.message_handler(commands=['gastos_mes'])
+def show_monthly_expenses(message):
+    user_id = message.from_user.id
+    try:
+        # Obtener los gastos del mes
+        gastos = obtener_gastos_del_mes()
+        if not gastos:
+            bot.reply_to(message, "No hay gastos registrados para este mes.")
+            return
+        
+        # Formatear los gastos para el mensaje
+        gastos_mensaje = "Gastos del mes:\n"
+        for gasto in gastos:
+            gastos_mensaje += (
+                f"Fecha: {gasto['fecha']}, "
+                f"Monto: {gasto['monto']}, "
+                f"Descripción: {gasto['descripcion']}, "
+                f"Tipo: {gasto['tipo_gasto']}\n"
+            )
+        
+        bot.reply_to(message, gastos_mensaje)
+    except Exception as e:
+        bot.reply_to(message, "Hubo un error al obtener los gastos del mes. Intenta nuevamente más tarde.")
+        print(f"Error al obtener los gastos del mes: {e}")
 
 if __name__ == '__main__':
     bot.infinity_polling()

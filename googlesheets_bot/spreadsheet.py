@@ -9,7 +9,11 @@ client = gspread.authorize(creds)
 sheets_id = config('SHEETS_ID')
 sheet = client.open_by_key(sheets_id)
 
-# print(sheet.sheet1.row_values(1))
+try:
+    api_worksheet = sheet.worksheet("API")
+except gspread.exceptions.WorksheetNotFound:
+    raise Exception("No se pudo acceder a la hoja 'API'. Verifique que exista y que tenga los permisos adecuados.")
+
 # Function to write data to the spreadsheet
 def escribir_en_hoja_de_calculo(fecha_str, monto_gasto, descripcion, tipo_gasto, row):
     """Writes expense data to the specified row in the spreadsheet.
@@ -21,10 +25,10 @@ def escribir_en_hoja_de_calculo(fecha_str, monto_gasto, descripcion, tipo_gasto,
         tipo_gasto (str): The type of the expense.
         row (int): The row number where the data will be written.
     """
-    sheet.sheet1.update_cell(row, 1, fecha_str)
-    sheet.sheet1.update_cell(row, 2, monto_gasto)
-    sheet.sheet1.update_cell(row, 3, descripcion)
-    sheet.sheet1.update_cell(row, 4, tipo_gasto)
+    api_worksheet.update_cell(row, 1, fecha_str)
+    api_worksheet.update_cell(row, 2, monto_gasto)
+    api_worksheet.update_cell(row, 3, descripcion)
+    api_worksheet.update_cell(row, 4, tipo_gasto)
 
 def obtener_ultima_fila_con_datos_columna(columna):
     """Returns the last row number with data in the specified column of the spreadsheet.
@@ -35,11 +39,9 @@ def obtener_ultima_fila_con_datos_columna(columna):
     Returns:
         int: The last row number with data in the specified column.
     """
-    col_data = sheet.sheet1.col_values(columna)
+    col_data = api_worksheet.col_values(columna)
     return len(col_data)
 
 
-
-# Example usage
-# print(obtener_ultima_fila_con_datos_columna(1))
-# escribir_en_hoja_de_calculo("Hola Mundo", 2, 1)  # Escribe "Hola Mundo" en la celda A2
+def obtener_gastos_del_mes():
+    pass #TODO: Implementar
